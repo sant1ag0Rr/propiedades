@@ -1,5 +1,5 @@
 const app = require("./app");
-const env = require("./config/env");
+const env = require("../config/env");
 
 app.listen(env.port, () => {
   console.log(`API escuchando en http://localhost:${env.port}/api/v1`);

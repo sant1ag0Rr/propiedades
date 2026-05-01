@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
-const env = require("../config/env");
-const HttpError = require("../utils/httpError");
+const env = require("../../infrastructure/config/env");
+const HttpError = require("../../domain/errors/HttpError");
 
-const authMiddleware = (req, _res, next) => {
+const verifyToken = (req, _res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next(new HttpError(401, "Token no enviado"));
+    return next(new HttpError(401, "Token no enviado o formato invalido"));
   }
 
   const token = authHeader.split(" ")[1];
@@ -14,9 +14,9 @@ const authMiddleware = (req, _res, next) => {
   try {
     req.user = jwt.verify(token, env.jwtSecret);
     return next();
-  } catch (_error) {
+  } catch (error) {
     return next(new HttpError(401, "Token invalido o expirado"));
   }
 };
 
-module.exports = authMiddleware;
+module.exports = verifyToken;

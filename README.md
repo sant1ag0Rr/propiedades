@@ -139,14 +139,10 @@ Los errores invalidos responden `400`, rutas sin token responden `401`, registro
 
 ```text
 src/
-  config/
-  controllers/
-  db/
-  middlewares/
-  routes/
-  schemas/
-  services/
-  utils/
+  domain/
+  application/
+  infrastructure/
+  interfaces/
 ```
 
 Flujo de ejemplo `GET /api/v1/properties`:

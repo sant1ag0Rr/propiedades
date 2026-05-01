@@ -2,9 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const v1Routes = require("./routes");
-const notFoundMiddleware = require("./middlewares/notFoundMiddleware");
-const errorMiddleware = require("./middlewares/errorMiddleware");
+const v1Routes = require("../../interfaces/routes/index");
+const notFoundMiddleware = require("../../interfaces/middlewares/notFoundMiddleware");
+const errorMiddleware = require("../../interfaces/middlewares/errorMiddleware");
 
 const app = express();
 

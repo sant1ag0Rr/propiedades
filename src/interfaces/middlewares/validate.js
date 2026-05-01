@@ -1,4 +1,4 @@
-const HttpError = require("../utils/httpError");
+const HttpError = require("../../domain/errors/HttpError");
 
 const validate = (schema, source = "body") => (req, _res, next) => {
   const result = schema.safeParse(req[source]);

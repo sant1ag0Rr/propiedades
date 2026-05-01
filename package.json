@@ -2,10 +2,10 @@
   "name": "propiedades",
   "version": "1.0.0",
   "description": "API REST para gestion de propiedades con Express, PostgreSQL, Prisma y JWT.",
-  "main": "src/server.js",
+  "main": "src/infrastructure/server/server.js",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
+    "dev": "nodemon src/infrastructure/server/server.js",
+    "start": "node src/infrastructure/server/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",

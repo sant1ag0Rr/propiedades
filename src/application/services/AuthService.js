@@ -6,19 +6,7 @@ const HttpError = require("../../domain/errors/HttpError");
 
 class AuthService {
   async login({ email, password }) {
-    // Hardcoded user fallback
-    if (email === "admin@test.com" && password === "123456") {
-      const token = jwt.sign(
-        { email: "admin@test.com" },
-        env.jwtSecret,
-        { expiresIn: "2h" }
-      );
-      return token;
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       throw new HttpError(401, "Credenciales invalidas");

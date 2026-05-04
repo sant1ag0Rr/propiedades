@@ -10,24 +10,21 @@ class PropertyService {
     };
   }
 
-  buildFilters({ location, minPrice, maxPrice }) {
+  buildFilters({ location, minPrice, maxPrice, available }) {
     const where = {};
 
     if (location) {
-      where.location = {
-        contains: location,
-        mode: "insensitive",
-      };
+      where.location = { contains: location, mode: "insensitive" };
     }
 
     if (minPrice !== undefined || maxPrice !== undefined) {
       where.price = {};
-      if (minPrice !== undefined) {
-        where.price.gte = new Prisma.Decimal(minPrice);
-      }
-      if (maxPrice !== undefined) {
-        where.price.lte = new Prisma.Decimal(maxPrice);
-      }
+      if (minPrice !== undefined) where.price.gte = new Prisma.Decimal(minPrice);
+      if (maxPrice !== undefined) where.price.lte = new Prisma.Decimal(maxPrice);
+    }
+
+    if (available !== undefined) {
+      where.available = available;
     }
 
     return where;
@@ -53,6 +50,7 @@ class PropertyService {
       total,
       page,
       limit,
+      totalPages: Math.ceil(total / limit),
     };
   }
 

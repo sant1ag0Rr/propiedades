@@ -18,6 +18,10 @@ const propertyQuerySchema = z
     location: z.string().trim().min(1).optional(),
     minPrice: z.coerce.number().nonnegative("minPrice debe ser positivo").optional(),
     maxPrice: z.coerce.number().nonnegative("maxPrice debe ser positivo").optional(),
+    available: z
+      .enum(["true", "false"], { error: "available debe ser true o false" })
+      .transform((v) => v === "true")
+      .optional(),
     page: z.coerce.number().int().positive().default(1),
     limit: z.coerce.number().int().positive().max(100).default(10),
   })

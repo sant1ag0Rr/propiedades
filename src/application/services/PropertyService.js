@@ -1,15 +1,9 @@
 const { Prisma } = require("@prisma/client");
-const prisma = require("../../infrastructure/db/prismaClient");
+const propertyRepository = require("../../infrastructure/repositories/PropertyRepository");
+const Property = require("../../domain/entities/Property");
 const HttpError = require("../../domain/errors/HttpError");
 
 class PropertyService {
-  formatProperty(property) {
-    return {
-      ...property,
-      price: Number(property.price),
-    };
-  }
-
   buildFilters({ location, minPrice, maxPrice, available }) {
     const where = {};
 
@@ -35,18 +29,13 @@ class PropertyService {
     const skip = (page - 1) * limit;
     const where = this.buildFilters(query);
 
-    const [properties, total] = await Promise.all([
-      prisma.property.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.property.count({ where }),
+    const [records, total] = await Promise.all([
+      propertyRepository.findAll(where, skip, limit),
+      propertyRepository.count(where),
     ]);
 
     return {
-      data: properties.map(this.formatProperty),
+      data: records.map((r) => new Property(r)),
       total,
       page,
       limit,
@@ -55,43 +44,38 @@ class PropertyService {
   }
 
   async findById(id) {
-    const property = await prisma.property.findUnique({ where: { id } });
+    const record = await propertyRepository.findById(id);
 
-    if (!property) {
+    if (!record) {
       throw new HttpError(404, "Propiedad no encontrada");
     }
 
-    return this.formatProperty(property);
+    return new Property(record);
   }
 
   async create(data) {
-    const property = await prisma.property.create({
-      data: {
-        ...data,
-        price: new Prisma.Decimal(data.price),
-      },
+    const record = await propertyRepository.create({
+      ...data,
+      price: new Prisma.Decimal(data.price),
     });
 
-    return this.formatProperty(property);
+    return new Property(record);
   }
 
   async update(id, data) {
     await this.findById(id);
 
-    const property = await prisma.property.update({
-      where: { id },
-      data: {
-        ...data,
-        price: new Prisma.Decimal(data.price),
-      },
+    const record = await propertyRepository.update(id, {
+      ...data,
+      price: new Prisma.Decimal(data.price),
     });
 
-    return this.formatProperty(property);
+    return new Property(record);
   }
 
   async remove(id) {
     await this.findById(id);
-    await prisma.property.delete({ where: { id } });
+    await propertyRepository.delete(id);
   }
 }
 

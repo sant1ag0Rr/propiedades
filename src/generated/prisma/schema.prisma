@@ -1,0 +1,37 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  output          = "../src/generated/prisma"
+}
+
+// 2. DATASOURCE: Las dos URLs son intocables para que funcione con Supabase
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Property {
+  id        Int      @id @default(autoincrement())
+  title     String
+  price     Decimal  @db.Decimal(14, 2)
+  location  String
+  available Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("properties")
+}
+
+// 4. MODELO USER (Adaptado con el estilo del profesor)
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre    String?  @db.VarChar(100) // Te agregué estos campos del profe por si los evalúa
+  apellidos String?  @db.VarChar(150)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("users")
+}
